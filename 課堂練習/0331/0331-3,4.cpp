@@ -1,10 +1,4 @@
-//
-//  0331-3,4.cpp
-//  0324
-//
-//  Created by 王聖夫 on 2020/4/20.
-//  Copyright © 2020 王聖夫. All rights reserved.
-//#include <iostream>
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -132,7 +126,3 @@ int main(){
     
     return 0;
 }
-
-
-
-#include "0331-3,4.hpp"
