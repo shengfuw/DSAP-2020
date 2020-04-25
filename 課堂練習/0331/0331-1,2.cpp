@@ -1,10 +1,3 @@
-//
-//  main.cpp
-//  0331
-//
-//  Created by 王聖夫 on 2020/4/20.
-//  Copyright © 2020 王聖夫. All rights reserved.
-//
 #include <iostream>
 using namespace std;
 
@@ -53,13 +46,5 @@ int main() {
         cout << "Equal!\n";
     else
         cout << "Unequal!\n";
-    return 0;
-}
-
-#include <iostream>
-
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
     return 0;
 }
