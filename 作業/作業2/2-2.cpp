@@ -152,3 +152,4 @@ int main(){
     int criticalValue = train.outcome();
     cout << criticalValue << "," << test.outcome(criticalValue);
 }
+
