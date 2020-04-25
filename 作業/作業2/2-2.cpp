@@ -153,3 +153,4 @@ int main(){
     cout << criticalValue << "," << test.outcome(criticalValue);
 }
 
+測試一波
