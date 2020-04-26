@@ -3,8 +3,7 @@
 using namespace std;
 
 template<typename ItemType>
-class BagInterface
-{
+class BagInterface{
 public:
   virtual int getCurrentSize() const = 0;
   virtual bool isEmpty() const = 0;
@@ -16,19 +15,14 @@ public:
   virtual void print() const = 0;
 };
 
-
-
-
 template<typename ItemType>
-class ArrayBag : public BagInterface<ItemType>
-{
+class ArrayBag : public BagInterface<ItemType>{
 private:
   static const int DEFAULT_CAPACITY = 6;
   ItemType items[DEFAULT_CAPACITY];
   int itemCount;
   int maxItems;
   int getIndexOf(const ItemType& target) const;
-
 public:
   ArrayBag();
   int getCurrentSize() const;
@@ -42,28 +36,23 @@ public:
 };
 
 template<typename ItemType>
-ArrayBag<ItemType>::ArrayBag(): itemCount(0), maxItems(DEFAULT_CAPACITY)
-{
+ArrayBag<ItemType>::ArrayBag(): itemCount(0), maxItems(DEFAULT_CAPACITY){
 }
 
 template<typename ItemType>
-int ArrayBag<ItemType>::getCurrentSize() const
-{
+int ArrayBag<ItemType>::getCurrentSize() const{
   return itemCount;
 }
 
 template<typename ItemType>
-bool ArrayBag<ItemType>::isEmpty() const
-{
+bool ArrayBag<ItemType>::isEmpty() const{
   return itemCount == 0;
 }
 
 template<typename ItemType>
-bool ArrayBag<ItemType>::add(const ItemType& newEntry)
-{
+bool ArrayBag<ItemType>::add(const ItemType& newEntry){
   bool hasRoomToAdd = (itemCount < maxItems);
-  if(hasRoomToAdd)
-  {
+  if(hasRoomToAdd){
     items[itemCount] = newEntry;
     itemCount++;
   }
@@ -71,12 +60,10 @@ bool ArrayBag<ItemType>::add(const ItemType& newEntry)
 }
  
 template<typename ItemType>
-bool ArrayBag<ItemType>::remove(const ItemType& anEntry)
-{
+bool ArrayBag<ItemType>::remove(const ItemType& anEntry){
   int locatedIndex = getIndexOf(anEntry);
   bool canRemoveItem = (locatedIndex > -1);
-  if(canRemoveItem)
-  {
+  if(canRemoveItem){
     itemCount--;
     items[locatedIndex] = items[itemCount];
   }
@@ -84,18 +71,15 @@ bool ArrayBag<ItemType>::remove(const ItemType& anEntry)
 }
 
 template<typename ItemType>
-void ArrayBag<ItemType>::clear()
-{
+void ArrayBag<ItemType>::clear(){
   itemCount = 0;
 }
 
 template<typename ItemType>
-int ArrayBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const
-{
+int ArrayBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const{
   int frequency = 0;
   int curIndex = 0;
-  while(curIndex < itemCount)
-  {
+  while(curIndex < itemCount){
     if(items[curIndex] == anEntry)
       frequency++;
     curIndex++;
@@ -104,30 +88,25 @@ int ArrayBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const
 }
 
 template<typename ItemType>
-bool ArrayBag<ItemType>::contains(const ItemType& anEntry) const
-{
+bool ArrayBag<ItemType>::contains(const ItemType& anEntry) const{
   return getIndexOf(anEntry) > -1;
 }
 
 template<typename ItemType>
-void ArrayBag<ItemType>::print() const
-{
+void ArrayBag<ItemType>::print() const{
   for(int i = 0; i < itemCount; i++)
     cout << items[i] << " ";
   cout << endl;
 }
 
 template<typename ItemType>
-int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const
-{
+int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const{
   bool found = false;
   int result = -1;
   int searchIndex = 0;
    
-  while(!found && (searchIndex < itemCount))
-  {
-    if(items[searchIndex] == target)
-    {
+  while(!found && (searchIndex < itemCount)){
+    if(items[searchIndex] == target){
       found = true;
       result = searchIndex;
     }
@@ -138,18 +117,7 @@ int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const
 }
 
 
-
-
-
-
-
-
-
-
-
-
-void displayBag(ArrayBag<string>& bag)
-{
+void displayBag(ArrayBag<string>& bag){
   cout << "The bag contains " << bag.getCurrentSize()
        << " items:" << endl;
 
@@ -158,16 +126,14 @@ void displayBag(ArrayBag<string>& bag)
   cout << endl << endl;
 }
 
-void bagTester(ArrayBag<string>& bag)
-{
+void bagTester(ArrayBag<string>& bag){
   cout << "isEmpty: returns " << bag.isEmpty()
        << "; should be 1 (true)" << endl;
   displayBag(bag);
 
   string items[] = {"one", "two", "three", "four", "five", "one"};
   cout << "Add 6 items to the bag: " << endl;
-  for (int i = 0; i < 6; i++)
-  {
+  for (int i = 0; i < 6; i++){
     bag.add(items[i]);
   }
    
@@ -214,8 +180,7 @@ void bagTester(ArrayBag<string>& bag)
        << "; should be 1 (true)" << endl;
 }
 
-int main()
-{
+int main(){
   ArrayBag<string> bag;
 
   cout << "Testing the Array-Based Bag:" << endl;

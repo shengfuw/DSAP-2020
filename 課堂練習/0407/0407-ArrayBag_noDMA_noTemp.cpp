@@ -13,10 +13,7 @@ public:
   virtual int getFrequencyOf(const ItemType& anEntry) const = 0;
   virtual bool contains(const ItemType& anEntry) const = 0;
   virtual void print() const = 0;
-  virtual bool removeAll(const ItemType& anEntry) = 0;
-  virtual bool contains(const ItemType entries[], int len) const = 0;
 };
-
 
 template<typename ItemType>
 class ArrayBag : public BagInterface<ItemType>{
@@ -26,7 +23,6 @@ private:
   int itemCount;
   int maxItems;
   int getIndexOf(const ItemType& target) const;
-
 public:
   ArrayBag();
   int getCurrentSize() const;
@@ -37,8 +33,6 @@ public:
   bool contains(const ItemType& anEntry) const;
   int getFrequencyOf(const ItemType& anEntry) const;
   void print() const;
-  bool removeAll(const ItemType& anEntry);
-  bool contains(const ItemType entries[], int len) const;
 };
 
 template<typename ItemType>
@@ -111,8 +105,10 @@ int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const{
   int result = -1;
   int searchIndex = 0;
    
-  while(!found && (searchIndex < itemCount)){
-    if(items[searchIndex] == target){
+  while(!found && (searchIndex < itemCount))
+  {
+    if(items[searchIndex] == target)
+    {
       found = true;
       result = searchIndex;
     }
@@ -120,36 +116,6 @@ int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const{
       searchIndex++;
   }
   return result;
-}
-
-/*
-Remove the same items assgined in the bag.
-Precondition: anEntry is an item to be removed from the bag.
-Postconfition: return true if the bag contains the item, and then the bag removes all of that item; return false if the bag does not contain the item. anEntry is unchaged.
-*/
-template<typename ItemType>
-bool ArrayBag<ItemType>::removeAll(const ItemType& anEntry){
-  bool hasSomethingToRemove = false;
-  while(contains(anEntry) == true){
-    remove(anEntry);
-    hasSomethingToRemove = true;
-  }
-  return hasSomethingToRemove;
-}
-
-/*
-Check whether the bag contains all items in an array.
-Precondition: entries is an array of items, and len is lentgh of the array.
-Postconfition: return true if the bag contains all items in the array; return false if not. entries and len remain unchanged.
-*/
-template<typename ItemType>
-bool ArrayBag<ItemType>::contains(const ItemType entries[], int len) const{
-
-  for(int i = 0; i < len; i++){
-    if(contains(entries[i]) == false)
-      return false;
-  }
-  return true;
 }
 
 
@@ -163,6 +129,8 @@ void displayBag(ArrayBag<string>& bag){
 }
 
 void bagTester(ArrayBag<string>& bag){
+  cout << "isEmpty: returns " << bag.isEmpty()
+       << "; should be 1 (true)" << endl;
   displayBag(bag);
 
   string items[] = {"one", "two", "three", "four", "five", "one"};
@@ -172,21 +140,46 @@ void bagTester(ArrayBag<string>& bag){
   }
    
   displayBag(bag);
-  
-  string toSearch[] = {"one", "two"};
-  cout << "Are there \"one\" and \"two\"? " << bag.contains(toSearch, 2)
-       << "; should be 1 (true)" << endl;
-  cout << endl;
    
-  cout << "remove all (\"one\"): returns " << bag.removeAll("one")
+  cout << "isEmpty: returns " << bag.isEmpty()
+       << "; should be 0 (false)" << endl;
+    
+  cout << "getCurrentSize: returns " << bag.getCurrentSize()
+       << "; should be 6" << endl;
+   
+  cout << "Try to add another entry: add(\"extra\") returns "
+       << bag.add("extra") << endl;
+   
+  cout << "contains(\"three\"): returns " << bag.contains("three")
        << "; should be 1 (true)" << endl;
+
+  cout << "contains(\"ten\"): returns " << bag.contains("ten")
+       << "; should be 0 (false)" << endl;
+
+  cout << "getFrequencyOf(\"one\"): returns "
+       << bag.getFrequencyOf("one") << " should be 2" << endl;
+
+  cout << "remove(\"one\"): returns " << bag.remove("one")
+       << "; should be 1 (true)" << endl;
+
+  cout << "getFrequencyOf(\"one\"): returns "
+       << bag.getFrequencyOf("one") << " should be 1" << endl;
+
+  cout << "remove(\"one\"): returns " << bag.remove("one")
+       << "; should be 1 (true)" << endl;
+
+  cout << "remove(\"one\"): returns " << bag.remove("one")
+       << "; should be 0 (false)" << endl;
+
   cout << endl;
    
   displayBag(bag);
-  
-  cout << "Are there \"one\" and \"two\"? " << bag.contains(toSearch, 2)
-       << "; should be 0 (false)" << endl;
-  cout << endl;
+   
+  cout << "After clearing the bag, ";
+  bag.clear();
+   
+  cout << "isEmpty: returns " << bag.isEmpty()
+       << "; should be 1 (true)" << endl;
 }
 
 int main(){
