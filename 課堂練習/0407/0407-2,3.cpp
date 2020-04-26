@@ -139,8 +139,9 @@ bool ArrayBag<ItemType>::removeAll(const ItemType& anEntry){
 
 /*
 Check whether the bag contains all items in an array.
-Precondition: entries is an array of items, and len is lentgh of the array.
-Postconfition: return true if the bag contains all items in the array; return false if not. entries and len remain unchanged.
+@pre entries is an array of items, and len is lentgh of the array; len must greater than or equals to 0.
+@post None.
+@return true if the bag contains all items in the array; return false if not; entries and len remain unchanged.
 */
 template<typename ItemType>
 bool ArrayBag<ItemType>::contains(const ItemType entries[], int len) const{
