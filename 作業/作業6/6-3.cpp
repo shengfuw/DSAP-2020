@@ -78,6 +78,15 @@ bool dfs(int **graph, int nodeCNT, int s, int t, int visited[]){
 }
 
 int augmentingPath(int **graph, int nodeCNT){
+    /*
+    for(int i = 0; i <= nodeCNT; i++){
+        for(int j = 0; j <= nodeCNT; j++){
+            cout << graph[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    cout << "============\n";
+    */
     
     int maxFlow = 0;
     bool hasRoad = true;
@@ -101,5 +110,15 @@ int augmentingPath(int **graph, int nodeCNT){
         }
     }
     
+    /*
+    for(int i = 0; i <= nodeCNT; i++){
+        for(int j = 0; j <= nodeCNT; j++){
+            cout << graph[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    cout << "============\n";
+    */
+     
     return maxFlow;
 }
