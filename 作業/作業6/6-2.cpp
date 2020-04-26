@@ -24,9 +24,9 @@ int main(){
         }
     }
     
-    //第一列一定是NS
+    //第一列第一行一定是NS
     matrix[0][0] = 0;
-    //跟自重量一樣一定是S
+    //第一列跟自己重量一樣一定是S
     matrix[0][weights[0]] = 1;
 
     //從first row開始跑，一個NS
@@ -41,7 +41,7 @@ int main(){
         }
     }
     
-    /*
+    
     //print 結果
     for(int i = 0; i < cnt; i++){
         for(int j = 0; j <= upperBound; j++){
@@ -49,7 +49,7 @@ int main(){
         }
         cout << "\n";
     }
-    */
+    
     
     //如果不存在有物品集合滿足條件
     if(matrix[cnt-1][upperBound] == -1){
