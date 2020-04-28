@@ -1,6 +1,6 @@
 #include<iostream>
 #include<stdexcept>
-#include <cmath>
+#include<cmath>
 using namespace std;
 
 //ADT: Stack
