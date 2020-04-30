@@ -14,6 +14,7 @@ public :
 };
 
 
+//Array-based Stack
 template<typename ItemType>
 class ArrayStack: public StackInterface<ItemType>{
 private:
@@ -65,18 +66,18 @@ ItemType ArrayStack<ItemType>::peek() const throw(logic_error){
 int precedence(const string op);// +,- < *,/ < ^
 
 template <typename T>
-void operation(ArrayStack<T>& operands, string opB);
+void operation(ArrayStack<T>& operands, string op);
 
 int main(){
-    
-    ArrayStack<int> operands; //數字
-    ArrayStack<string> operators; //運算符號
 
     string text;
     while (getline(cin, text)) {
         text += " ";
         size_t cur = 0;
         size_t pos = text.find(" ", cur);
+        
+        ArrayStack<int> operands; //數字
+        ArrayStack<string> operators; //運算符號
         
         //stage 1:
         while(pos != string::npos){
@@ -125,21 +126,21 @@ int precedence(const string op){
 }
 
 template <typename T>
-void operation(ArrayStack<T>& operands, string opB){
+void operation(ArrayStack<T>& operands, string op){
     
     int num2 = operands.peek();
     operands.pop();
     int num1 = operands.peek();
     operands.pop();
     
-    if(opB == "+")
+    if(op == "+")
         operands.push(num1 + num2);
-    else if(opB == "-")
+    else if(op == "-")
         operands.push(num1 - num2);
-    else if(opB == "*")
+    else if(op == "*")
         operands.push(num1 * num2);
-    else if(opB == "/")
+    else if(op == "/" && num2 != 0)
         operands.push(num1 / num2);
-    else if(opB == "^")
+    else if(op == "^")
         operands.push(pow(num1, num2));
 }
