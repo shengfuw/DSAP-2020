@@ -72,33 +72,33 @@ int main(){
 
     string text;
     while (getline(cin, text)) {
-        text += " ";
-        size_t cur = 0;
-        size_t pos = text.find(" ", cur);
+        text += " "; //這樣最後一個數字才find的到
+        size_t cur = 0; //從第一開始找
+        size_t pos = text.find(" ", cur); //找第一個空格（參數代表：找的起點）
         
         ArrayStack<int> operands; //數字
         ArrayStack<string> operators; //運算符號
         
-        //stage 1:
-        while(pos != string::npos){
-            string temp = text.substr(cur, pos - cur);
-            if(temp == "+" || temp == "-" || temp == "*" || temp == "/" || temp == "^"){
+        //stage 1: （在這裡把一個一個東西讀進來）
+        while(pos != string::npos){ //直到找不到下一個空隔
+            string token = text.substr(cur, pos - cur); // (找空格的起點, 字的長度)
+            if(token == "+" || token == "-" || token == "*" || token == "/" || token == "^"){
                 if(!operators.isEmpty()){
                     string opB = operators.peek();
-                    while (precedence(temp) <= precedence(opB) && operators.pop()) {
+                    while (precedence(token) <= precedence(opB) && operators.pop()) {
                         operation(operands, opB);
                         if(!operators.isEmpty())
                             opB = operators.peek();
                     }
                 }
-                operators.push(temp);
+                operators.push(token);
             }
             else{
-                int num = stoi(temp);
+                int num = stoi(token);
                 operands.push(num);
             }
             
-            cur = pos + 1;
+            cur = pos + 1; //從找到的空格的下一個當作找的起點
             pos = text.find(" ", cur);
         }
         
