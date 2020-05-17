@@ -11,11 +11,19 @@ struct event{
     event(bool type, int time, int duration = 0): type(type), time(time), duration(duration){ };
 };
 
+//overload operator for priority_queue
 bool operator<(const event& aEvent, const event& bEvent){
     if(aEvent.time == bEvent.time)
         return aEvent.type < bEvent.type;
     return aEvent.time > bEvent.time;
 }
+
+bool operator>(const event& aEvent, const event& bEvent){
+    if(aEvent.time == bEvent.time)
+        return aEvent.type > bEvent.type;
+    return aEvent.time < bEvent.time;
+}
+
 
 struct customer{
     int waitFrom;
@@ -23,11 +31,6 @@ struct customer{
     customer(int waitFrom, int duration): waitFrom(waitFrom), duration(duration){ };
 };
 
-bool operator>(const event& aEvent, const event& bEvent){
-    if(aEvent.time == bEvent.time)
-        return aEvent.type > bEvent.type;
-    return aEvent.time < bEvent.time;
-}
 
 int main(){
     priority_queue<event> eventListPQueue;
@@ -96,10 +99,9 @@ int main(){
                 tellerAvailable = true;
         }
     }
-    cout << "Simulation Ends\n\nFinal Statistics:\n\n";
+    cout << "Simulation Ends\n\n" << "Final Statistics:\n\n";
     cout << "\tTotal number of people processed: " << customer_CNT << "\n";
     cout << "\tAverage amount of time spent waiting: ";
-    printf("%3.1f" , SUMOfWaitingTime/customer_CNT );
+    printf("%3.1f" , SUMOfWaitingTime/customer_CNT);
     cout << "\n";
 }
-

@@ -88,7 +88,6 @@ int main(){
                 bankQueue.push(newCustomer);
             }
             bankCustomerCnt++;
-            //cout << bankCustomerCnt << "\n";
         }
         else{
             cout << "Processing a departure event at time: " << currentTime << "\n";
@@ -105,16 +104,15 @@ int main(){
             }
             else
                 tellerAvailable = true;
-            //cout << bankCustomerCnt << "\n";
         }
     }
-    cout << "Simulation Ends\n\nFinal Statistics:\n\n";
+    cout << "Simulation Ends\n\n " << "Final Statistics:\n\n";
     cout << "\tTotal number of people processed: " << customer_CNT << "\n";
     cout << "\tAverage amount of time spent waiting: ";
     printf("%3.1f" , SUMOfWaitingTime/customer_CNT );
     cout << "\n";
 }
-/*
+/* Test data
  1    4: 5
  1    4: 5
  1    4: 5

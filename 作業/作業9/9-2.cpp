@@ -9,14 +9,14 @@ struct event{
     int time;
     int duration; //only for Arrival event
     char teller;//only for Departure event
-    int ID;
+    int ID;// order
     event(bool type, int time, int duration = 0, char teller = 0, int ID = 0): type(type), time(time), duration(duration), teller(teller), ID(ID){ };
 };
 
 bool operator<(const event& aEvent, const event& bEvent){
     if(aEvent.time == bEvent.time){
         if(aEvent.type == bEvent.type)
-            return aEvent.ID > bEvent.ID;
+            return aEvent.ID > bEvent.ID; // 若同時加入，先加入的排前面
         return aEvent.type < bEvent.type;
     }
     return aEvent.time > bEvent.time;
@@ -29,6 +29,7 @@ bool operator>(const event& aEvent, const event& bEvent){
         return aEvent.type > bEvent.type;
     return aEvent.time < bEvent.time;
 }
+
 
 struct customer{
     int waitFrom;
@@ -79,7 +80,7 @@ int main(){
         customer_CNT++;
     }
     
-    /*
+    /* Check if order is correct
     priority_queue<event> test = eventListPQueue;
     int n = test.size();
     for(int i = 0; i < n; i++){
@@ -96,43 +97,27 @@ int main(){
         if(newEvent.type == 1){
             cout << "Processing an arrival event at time: " << currentTime << "\n";
             eventListPQueue.pop();
-            
-            //cout << A_customer_CNT << ", " << B_customer_CNT << ", " << C_customer_CNT << "\n";
-            
-            if(C_customer_CNT < A_customer_CNT && C_customer_CNT < B_customer_CNT){
+            if(C_customer_CNT < A_customer_CNT && C_customer_CNT < B_customer_CNT)
                 intoLine(bankQueueC, CtellerAvailable, newEvent, currentTime, eventListPQueue, 'C', C_customer_CNT);
-                //cout << "C\n";
-            }
-            else if(B_customer_CNT < A_customer_CNT){
+            else if(B_customer_CNT < A_customer_CNT)
                 intoLine(bankQueueB, BtellerAvailable, newEvent, currentTime, eventListPQueue, 'B', B_customer_CNT);
-                //cout << "B\n";
-            }
-            else{
+            else
                 intoLine(bankQueueA, AtellerAvailable, newEvent, currentTime, eventListPQueue, 'A', A_customer_CNT);
-                //cout << "A\n";
-            }
-            
-            //cout << A_customer_CNT << ", " << B_customer_CNT << ", " << C_customer_CNT << "\n---------------\n";
         }
         else{
             cout << "Processing a departure event at time: " << currentTime << "\n";
             eventListPQueue.pop();
-            
-            //cout << A_customer_CNT << ", " << B_customer_CNT << ", " << C_customer_CNT << "\n";
-            
+
             char teller = newEvent.teller;
-            //cout << teller << "\n";
             if(teller == 'A')
                 outLine(bankQueueA, currentTime, eventListPQueue, SUMOfWaitingTime, AtellerAvailable, A_customer_CNT, 'A');
             else if(teller == 'B')
                 outLine(bankQueueB, currentTime, eventListPQueue, SUMOfWaitingTime, BtellerAvailable, B_customer_CNT, 'B');
             else
                 outLine(bankQueueC, currentTime, eventListPQueue, SUMOfWaitingTime, CtellerAvailable, C_customer_CNT, 'C');
-            
-             //cout << A_customer_CNT << ", " << B_customer_CNT << ", " << C_customer_CNT << "\n~~~~~~~~~~~~~~\n";
         }
     }
-    cout << "Simulation Ends\n\nFinal Statistics:\n\n";
+    cout << "Simulation Ends\n\n" << "Final Statistics:\n\n";
     cout << "\tTotal number of people processed: " << customer_CNT << "\n";
     cout << "\tAverage amount of time spent waiting: ";
     printf("%3.1f" , SUMOfWaitingTime/customer_CNT );
@@ -142,14 +127,11 @@ int main(){
 void intoLine(queue<customer> &bankQueue, bool& tellerAvailable, event newEvent, int currentTime, priority_queue<event> &eventListPQueue, char teller, int& customer_CNT){
     if(bankQueue.empty() && tellerAvailable){
         int departureTime = currentTime + newEvent.duration;
-        //cout << teller << " " << currentTime << " " << departureTime << "\n";
         event newDepartureEvent(0, departureTime, 0, teller);
-        //cout << departureTime << "\n";
         eventListPQueue.push(newDepartureEvent);
         tellerAvailable = false;
     }
     else{
-        //cout << newEvent.duration << "\n";
         customer newCustomer(currentTime, newEvent.duration);
         bankQueue.push(newCustomer);
     }
@@ -161,7 +143,6 @@ void outLine(queue<customer> &bankQueue, int currentTime, priority_queue<event> 
         customer newCustomer = bankQueue.front();
         bankQueue.pop();
         int departureTime = currentTime + newCustomer.duration;
-        //cout << departureTime << "\n";
         event newDepartureEvent(0, departureTime, 0, teller);
         eventListPQueue.push(newDepartureEvent);
         int waitingTime = currentTime - newCustomer.waitFrom;
@@ -171,7 +152,8 @@ void outLine(queue<customer> &bankQueue, int currentTime, priority_queue<event> 
         tellerAvailable = true;
     customer_CNT--;
 }
-/*
+
+/* Test data
  1    4: A(5)
  1    4: B(5)
  1    4: C(5)
