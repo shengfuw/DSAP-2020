@@ -9,7 +9,7 @@ template<class ItemType>
 class ArrayMinHeap{
 private:
     static const int ROOT_INDEX = 0;
-    static const int DEFAULT_CAPACITY = 10000;
+    static const int DEFAULT_CAPACITY = 100000;
     ItemType* items;
     int itemCount;
     
@@ -18,19 +18,22 @@ private:
     int getParentIndex(const int nodeIndex) const;
     bool isLeaf(int nodeIndex) const;
     void heapRebuild(int subTreeRootIndex);
+    void heapCreate();
+    
     void preorder(void visit(ItemType&), int subTreeRootIndex) const;
     void inorder(void visit(ItemType&), int subTreeRootIndex) const;
     void postorder(void visit(ItemType&), int subTreeRootIndex) const;
     
 public:
     ArrayMinHeap(): itemCount(0) { items = new ItemType[DEFAULT_CAPACITY]; };
-    virtual ~ArrayMinHeap(){ delete items; };
+    ArrayMinHeap(const ItemType someArray[], const int arraySize);
+    virtual ~ArrayMinHeap(){ delete [] items; };
     
     int getHeight() const;
-    int getNumberOfNodes() const{ return itemCount; };
+    int getNumberOfNodes() const { return itemCount; };
     int getNumberOfLeafNodes() const;
     bool add(const ItemType& newData);
-    bool remove();
+    bool removeRoot();
     void preorderTraverse(void visit(ItemType&)) const;
     void inorderTraverse(void visit(ItemType&)) const;
     void postorderTraverse(void visit(ItemType&)) const;
@@ -56,27 +59,33 @@ int ArrayMinHeap<ItemType>::getParentIndex(const int nodeIndex) const{
 
 template<class ItemType>
 bool ArrayMinHeap<ItemType>::isLeaf(int nodeIndex) const{
-    if(getLeftChildIndex(nodeIndex) > itemCount - 1)
-        return true;
-    return false;
+    return getLeftChildIndex(nodeIndex) > (itemCount - 1);
 }
 
 template<class ItemType>
 void ArrayMinHeap<ItemType>::heapRebuild(int subTreeRootIndex){
     if(!isLeaf(subTreeRootIndex)){
-        int smallerChildIndex = getLeftChildIndex(subTreeRootIndex);
+        int smallerChildIndex = getLeftChildIndex(subTreeRootIndex);;
+        
         if(getRightChildIndex(subTreeRootIndex) < itemCount){
             int rightChildIndex  = smallerChildIndex + 1;
-            if(items[rightChildIndex] < items[smallerChildIndex])
+            if(items[rightChildIndex] < items[smallerChildIndex]) // < or <= ?
                 smallerChildIndex = rightChildIndex;
         }
-        if(items[smallerChildIndex] < items[subTreeRootIndex]){
+        if(items[smallerChildIndex] < items[subTreeRootIndex]){ // < or <= ?
             ItemType temp = items[subTreeRootIndex];
             items[subTreeRootIndex] = items[smallerChildIndex];
             items[smallerChildIndex] = temp;
             heapRebuild(smallerChildIndex);
         }
     }
+}
+
+template<class ItemType>
+void ArrayMinHeap<ItemType>::heapCreate(){
+   for (int index = itemCount / 2; index >= 0; index--){
+      heapRebuild(index);
+   }
 }
 
 template<class ItemType>
@@ -107,6 +116,19 @@ void ArrayMinHeap<ItemType>::postorder(void visit(ItemType&), int subTreeRootInd
 }
 
 template<class ItemType>
+ArrayMinHeap<ItemType>::ArrayMinHeap(const ItemType someArray[], const int arraySize): itemCount(arraySize){
+   // Allocate the array
+   items = new ItemType[2 * arraySize];
+   
+   // Copy given values into the array
+   for (int i = 0; i < itemCount; i++)
+      items[i] = someArray[i];
+   
+   // Reorganize the array into a heap
+   heapCreate();
+}
+
+template<class ItemType>
 bool ArrayMinHeap<ItemType>::add(const ItemType& newData){
     items[itemCount] = newData;
     
@@ -115,7 +137,7 @@ bool ArrayMinHeap<ItemType>::add(const ItemType& newData){
     
     while (!inPlace && newDataIndex > 0) {
         int parentIndex = getParentIndex(newDataIndex);
-        if(items[newDataIndex] >= items[parentIndex])
+        if(items[parentIndex] <= items[newDataIndex])
             inPlace = true;
         else{
             ItemType temp = items[newDataIndex];
@@ -124,8 +146,8 @@ bool ArrayMinHeap<ItemType>::add(const ItemType& newData){
             newDataIndex = parentIndex;
         }
     }
-    itemCount++;
     
+    itemCount++;
     return inPlace;
 }
 
@@ -148,7 +170,7 @@ int ArrayMinHeap<ItemType>::getNumberOfLeafNodes() const{
 }
 
 template<class ItemType>
-bool ArrayMinHeap<ItemType>::remove(){
+bool ArrayMinHeap<ItemType>::removeRoot(){
     if(itemCount == 0)
         return false;
 
@@ -167,7 +189,6 @@ void ArrayMinHeap<ItemType>::preorderTraverse(void visit(ItemType&)) const{
 template<class ItemType>
 void ArrayMinHeap<ItemType>::inorderTraverse(void visit(ItemType&)) const{
     inorder(visit, 0);
-    
 }
 
 template<class ItemType>
@@ -180,15 +201,13 @@ void display(ArrayMinHeap<T>& heap);
 
 int main(){
     
-    /*
     vector<int> input;
     int n = 0;
     while (cin >> n) {
         input.push_back(n);
     }
-    */
     
-    vector<int> input = {12,4,5,1,4,3,1,24,14,5,6};
+    //vector<int> input = {14,9,0,1,2,7,5,20,12,3,8,24,13};
     
     ArrayMinHeap<int> heap;
     for(int i = 0; i < input.size(); i++){
@@ -196,13 +215,12 @@ int main(){
     }
     display(heap);
     
-    int removeNum = int(input.size()/ 2) ;
-    cout << "** after removing " << removeNum << " nodes **\n";
+    int removeNum = int(input.size())/2;
     for(int i = 0 ; i < removeNum; i++){
-        heap.remove();
+        heap.removeRoot();
     }
+    cout << "** after removing " << removeNum << " nodes **\n";
     display(heap);
-    
 }
 
 void visit(int& item){
