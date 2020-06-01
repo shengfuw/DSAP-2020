@@ -249,7 +249,7 @@ int main(){
         input.push_back(n);
     }
     
-    //vector<int> input = {1,3,5,2,4,6};
+    vector<int> input = {1,3,5,2,4,6};
     
     BinarySearchTree<int> tree1;
     for(int i = 0; i < input.size(); i++){

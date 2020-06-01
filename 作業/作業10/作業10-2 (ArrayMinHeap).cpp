@@ -201,13 +201,15 @@ void display(ArrayMinHeap<T>& heap);
 
 int main(){
     
+    /*
     vector<int> input;
     int n = 0;
     while (cin >> n) {
         input.push_back(n);
     }
+    */
     
-    //vector<int> input = {14,9,0,1,2,7,5,20,12,3,8,24,13};
+    vector<int> input = {6,9,7,10,3,2,1,5,8,4};
     
     ArrayMinHeap<int> heap;
     for(int i = 0; i < input.size(); i++){
