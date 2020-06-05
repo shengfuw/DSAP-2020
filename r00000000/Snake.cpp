@@ -58,11 +58,21 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
     int orientationISCorrect = 0;
     int spaceMAX = 0;
     
+    int tailSurroundingSpaces = 4;
+    for(int n = 0; n < 4; n++){
+        int tailX = get<0>(position.front());
+        int tailY = get<1>(position.front());
+        int x = directions[n][0];
+        int y = directions[n][1];
+        if(map[tailX+x][tailY+y] == -1 || map[tailX+x][tailY+y] == -3)
+            tailSurroundingSpaces--;
+    }
+    
     for(int i = 0; i < 4; i++){
         int dirX = directions[i][0];
         int dirY = directions[i][1];
         int pos = map[headX+dirX][headY+dirY];// check if can move to this poistion
-        if(pos >= 0){
+        if(pos != -3 && pos != -1){
             //calculate distant from this poistion to the target
             int dis = abs(headX + dirX - targetX) + abs(headY + dirY - targetY);
 
@@ -87,15 +97,17 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
             //display this position information
             //cout << headX + dirX << "," << headY + dirY << ": " << abs(headX + dirX - targetX) << " + " << abs(headY + dirY - targetY) << " = " << dis << " ; " << orientation << " " << surroundingSpaces << "\n";
             
-            //compare order: distant -> orientation -> surrounding space
+            //compare order: distant -> surrounding space -> orientation
             bool swapPosition = false;
-            if(surroundingSpaces > 0){
-                if(dis < minDis)
-                    swapPosition = true;
-                else if(dis == minDis){
-                    if(orientation > orientationISCorrect)
+            if(surroundingSpaces > 0 || map[headX+dirX][headY+dirY] == -2){
+                if(dis < minDis){
+                    if(tailSurroundingSpaces != 0 || dis != 0) // 需要去考慮尾巴沒空間身體延長的問題嗎？
                         swapPosition = true;
-                    else if(orientation == orientationISCorrect && spaceMAX < surroundingSpaces)
+                }
+                else if(dis == minDis){
+                    if(surroundingSpaces > spaceMAX)
+                        swapPosition = true;
+                    else if(surroundingSpaces == spaceMAX && orientationISCorrect < orientation)
                         swapPosition = true;
                 }
             }
@@ -131,3 +143,8 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
 int Snake::getlen(){
     return Bodylength;
 }
+
+int Snake::geteatenTarget(){
+    return eatenTarget;
+}
+

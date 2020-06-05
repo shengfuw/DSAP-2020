@@ -13,35 +13,30 @@ void displayOutcome(const vector<vector<int>> map, Snake snake);
 
 int main(){
     vector<vector<int>> map;
-    int height = 7, width = 9;
+    int height = 8, width = 10;
     generateMAP(map, height ,width);
     //displayMAP(map);
     
+    vector<vector<int>> startBody = {
+        {1,3},{1,2},{1,1},{2,1},{2,2},{2,3},{2,4},{3,4},{3,5},{3,6},{2,6},{1,6}
+    };
     queue<tuple<int,int>> startPosition;
-    tuple<int,int> p1(3,1);
-    tuple<int,int> p2(4,1);
-    tuple<int,int> p3(4,2);
-    tuple<int,int> p4(3,2);
-    tuple<int,int> p5(2,2);
-    tuple<int,int> p6(2,3);
-    tuple<int,int> p7(3,3);
-    tuple<int,int> p8(4,3);
-    tuple<int,int> p9(5,3);
-    startPosition.push(p1);
-    startPosition.push(p2);
-    startPosition.push(p3);
-    startPosition.push(p4);
-    startPosition.push(p5);
-    startPosition.push(p6);
-    startPosition.push(p7);
-    startPosition.push(p8);
-    startPosition.push(p9);
+    for(int i = 0; i < startBody.size(); i++){
+        tuple<int,int> temp(startBody[i][0],startBody[i][1]);
+        startPosition.push(temp);
+    }
     Snake snake(startPosition);
     
 
     vector<vector<int>> targets = {
-        {1,3},{5,6}
+        {5,3}
     };
+    /*
+    for(int i = 2; i <= 20; i++)
+        targets.push_back({i,i});
+    targets.push_back({1,28});
+    */
+    
     int targetsCNT = int(targets.size());
     int step = 0, curEaten = 0;
     map[targets[curEaten][0]][targets[curEaten][1]] = 1;
@@ -53,9 +48,9 @@ int main(){
         step++;
         cout << "Step " << step << "\n";
         displayOutcome(map, snake);
-        if(snake.eatenTarget == targetsCNT)
+        if(snake.geteatenTarget() == targetsCNT)
             break;
-        if(snake.eatenTarget > curEaten){
+        if(snake.geteatenTarget() > curEaten){
             map[targets[curEaten][0]][targets[curEaten][1]] = 0;
             curEaten++;
             map[targets[curEaten][0]][targets[curEaten][1]] = 1;

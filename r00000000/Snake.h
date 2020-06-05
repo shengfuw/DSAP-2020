@@ -9,12 +9,13 @@ private:
 	queue<tuple<int, int>> position;
     
     int Bodylength;
+    int eatenTarget;
     
 public:
 	Snake(queue<tuple<int, int>> startPosition);
 	queue<tuple<int, int>> nextPosition(vector<vector<int>> map);
     
     int getlen();
-    int eatenTarget;
+    int geteatenTarget();
 };
 
