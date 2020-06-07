@@ -17,7 +17,6 @@ int main(){
     generateMAP(map, height ,width);
     //displayMAP(map);
     
-    
     //set snake start position
     vector<vector<int>> startBody = {
         {3,1},{3,2},{3,3},{2,3},{1,3},{1,2},{1,1},{2,1}

@@ -62,11 +62,10 @@ void displayOutcome(const vector<vector<int>> map, Snake snake){
     cout << "---------------------------\n";
 }
 
-
 void loadmaps(vector<vector<int>> map[101]) {
     //    vector<vector<int>> map[101]; //maps
     fstream file;
-    char buffer[150];
+    char buffer[250];
     string fname;
     for (int i = 1; i < 101; i++) {
         if (i < 10)
@@ -99,7 +98,7 @@ void loadmaps(vector<vector<int>> map[101]) {
     }
 }
 
-vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, queue<tuple<int, int>> snack) {
+vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, queue<tuple<int, int>> snake) {
     tuple<int, int> position;
     int row = 0, col = 0;
     int flag3 = 0;
@@ -121,15 +120,14 @@ vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, que
     //cout << mapindex << " #\n";
 
     int flag = 0;
-    queue<tuple<int, int>> tempsnack = snack;
-    while (!tempsnack.empty() && flag == 0) {
-        if (tempsnack.front() == position) {
+    queue<tuple<int, int>> tempsnake = snake;
+    while (!tempsnake.empty() && flag == 0) {
+        if (tempsnake.front() == position) {
             flag = 1;
         }
-        tempsnack.pop();
+        tempsnake.pop();
     }
     if (flag == 0){
-        //displayOutcome(map[mapindex],snack);
         return map[mapindex];
     }
     else {
@@ -137,15 +135,15 @@ vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, que
             if (i > 0 && i < 49 && flag3 == 0) {
                 for (int j = col - 1; j < col + 2; j++) {
                     if (j > 0 && j < 49 && flag3 == 0) {
-                        tempsnack = snack;
+                        tempsnake = snake;
                         flag = 0;
                         position = make_tuple(i, j);
                        
-                        while (!tempsnack.empty() && flag == 0) {
-                            if (tempsnack.front() == position) {
+                        while (!tempsnake.empty() && flag == 0) {
+                            if (tempsnake.front() == position) {
                                 flag = 1;
                             }
-                            tempsnack.pop();
+                            tempsnake.pop();
                         }
                         if (flag == 0) {
                             flag3 = 1;
@@ -189,14 +187,14 @@ vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, que
                 if (i > 0 && i < 49 && flag5 == 0) {
                     for (int j = col - 2; j < col + 3; j++) {
                         if (j > 0 && j < 49 && flag5 == 0) {
-                            tempsnack = snack;
+                            tempsnake = snake;
                             flag = 0;
                             position = make_tuple(i, j);
-                            while (!tempsnack.empty() && flag == 0) {
-                                if (tempsnack.front() == position) {
+                            while (!tempsnake.empty() && flag == 0) {
+                                if (tempsnake.front() == position) {
                                     flag = 1;
                                 }
-                                tempsnack.pop();
+                                tempsnake.pop();
                             }
                             if (flag == 0) {
                                 flag5 = 1;
@@ -241,15 +239,15 @@ vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, que
                 if (i > 0 && i < 49 && flagall == 0) {
                     for (int j = 0; j < 50; j++) {
                         if (j > 0 && j < 49 && flagall == 0) {
-                            tempsnack = snack;
+                            tempsnake = snake;
                             flag = 0;
                             position = make_tuple(i, j);
                             
-                            while (!tempsnack.empty() && flag == 0) {
-                                if (tempsnack.front() == position) {
+                            while (!tempsnake.empty() && flag == 0) {
+                                if (tempsnake.front() == position) {
                                     flag = 1;
                                 }
-                                tempsnack.pop();
+                                tempsnake.pop();
                             }
                             if (flag == 0) {
                                 flag5 = 1;
@@ -311,77 +309,25 @@ queue<tuple<int, int>> get_start_position() {
     return re;
 }
 
-vector<vector<int>> get_map() {
-    vector<vector<int>> re;
+int main() {
 
-    return re;
-}
-//
-//vector<vector<int>> generate_map(vector<vector<int>> map[], int mapindex, queue<tuple<int, int>> snack) {
-//    return map[mapindex];
-//}
-
-
-int main(int argc, char *argv[]) {
     queue<tuple<int, int>> ori_pos;
     queue<tuple<int, int>> new_pos = get_start_position();
 
     Snake snake(new_pos);
-
-    /*///
-#pragma region TmpMap
-    vector<vector<int>> v1 = {
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
-        {-1,  0,  0,  0,  0,  1,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1}
-    };
-
-    vector<vector<int>> v2 = {
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  2, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1}
-    };
-
-    vector<vector<int>> v3 = {
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  1,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1,  0,  0,  0,  0,  0,  0,  0, -1},
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1}
-    };
-
-#pragma endregion
-    vector<vector<int>> whole_map[3] = { v1, v2, v3 };
-    ///*/
 
     vector<vector<int>> whole_map[101];
     loadmaps(whole_map);
 
     int cur_map_index = 1;
     vector<vector<int>> map = generate_map(whole_map, cur_map_index, new_pos);
-
     
     int step_limit = 10000;
     int point = 0;
     cout << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << point << "\n";
 
     for (int i = 0; i < step_limit; i++) {
+        
         ori_pos = new_pos;
         new_pos = snake.nextPosition(map);
 
@@ -391,27 +337,30 @@ int main(int argc, char *argv[]) {
         int new_head_y = get<1>(new_pos.back());
         cout << i << ": " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << map[new_head_x][new_head_y] << "$" << point << "\n";
 
-        // Walk one step
+        /* Walk one step */
         int one_step_limit = 1;
         one_step_limit -= abs(get<0>(ori_pos.back()) - new_head_x);
         one_step_limit -= abs(get<1>(ori_pos.back()) - new_head_y);
         if (one_step_limit != 0) {
-            cout << argv[1] << " A: Invalid step... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+            cout << " A: Invalid step... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+            //displayOutcome(map, snake);
             break;
         }
 
-        // Hit wall
+        /* Hit wall */
         if (map[new_head_x][new_head_y] == -1) {
-            cout << argv[1] << " B: GAME OVER! Hit wall... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+            cout << " B: GAME OVER! Hit wall... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+            //displayOutcome(map, snake);
             break;
         }
 
-        // Hit self
+        /* Hit self */
         queue<tuple<int, int>> tmp_queue = new_pos;
         bool ifGameOver = false;
         for (int i = 0; i < new_pos.size() - 1; i++) {
             if (get<0>(tmp_queue.front()) == new_head_x && get<1>(tmp_queue.front()) == new_head_y) {
-                cout << argv[1] << " C: GAME OVER! Hit yourself... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+                cout << " C: GAME OVER! Hit yourself... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+                //displayOutcome(map, snake);
                 ifGameOver = true;
                 break;
             }
@@ -419,30 +368,29 @@ int main(int argc, char *argv[]) {
         }
         if(ifGameOver)
             break;
-        // Check teleport
-        // TBD...
 
-        // Count point and check eat longer
+        /* Count point and check eat longer */
         if (map[new_head_x][new_head_y] > 0) {
             if (new_pos.size() != ori_pos.size() + 1) {
-                cout << argv[1] << " D: Invalid eat length... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+                cout << " D: Invalid eat length... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
                 break;
             }
-
+            
             point += map[new_head_x][new_head_y];
-            map = generate_map(whole_map, ++cur_map_index, new_pos);
+            cur_map_index++;
+            if(cur_map_index > 100)
+                break;
+            map = generate_map(whole_map, cur_map_index, new_pos);
         }
         else {
             if (new_pos.size() != ori_pos.size()) {
-                cout << argv[1]<< " E: Invalid length... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+                cout << " E: Invalid length... " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "\n";
+                //displayOutcome(map, snake);
                 break;
             }
         }
-        if(cur_map_index > 100) {
-            break;
-        }
     }
-    cout << argv[1] << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "$" << point << "\n";
+    cout << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << " $ " << point << " / " << 100 << " |\n";
 
     //system("pause");
     return 0;

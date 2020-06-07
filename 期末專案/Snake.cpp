@@ -1,6 +1,4 @@
 #include "Snake.h"
-#include <iostream>
-#include <iomanip>
 #include <cmath>
 
 Snake::Snake(queue<tuple<int, int>> startPosition) {
@@ -190,10 +188,8 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
     }
     
     if(dir != -1){
-        if(eatenTarget <= 53){ // HERE !!!!!!!!
-            headX += directions[dir][0];
-            headY += directions[dir][1];
-        }
+        headX += directions[dir][0];
+        headY += directions[dir][1];
         
         tuple<int,int> head(headX, headY);
         position.push(head);
@@ -217,4 +213,5 @@ int Snake::getlen(){
 int Snake::geteatenTarget(){
     return eatenTarget;
 }
+
 
