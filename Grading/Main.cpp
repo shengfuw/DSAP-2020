@@ -13,6 +13,8 @@
 
 using namespace std;
 
+int const mapCNT = 102;
+
 void displayOutcome(const vector<vector<int>> map, Snake snake){
     int height = int(map.size());
     int width = int(map[0].size());
@@ -62,12 +64,12 @@ void displayOutcome(const vector<vector<int>> map, Snake snake){
     cout << "---------------------------\n";
 }
 
-void loadmaps(vector<vector<int>> map[101]) {
-    //    vector<vector<int>> map[101]; //maps
+void loadmaps(vector<vector<int>> map[mapCNT]) {
+    //    vector<vector<int>> map[mapCNT]; //maps
     fstream file;
     char buffer[250];
     string fname;
-    for (int i = 1; i < 101; i++) {
+    for (int i = 1; i < mapCNT; i++) {
         if (i < 10)
             fname = "00" + to_string(i);
         else if (i < 100)
@@ -98,7 +100,7 @@ void loadmaps(vector<vector<int>> map[101]) {
     }
 }
 
-vector<vector<int>> generate_map(vector<vector<int>> map[101], int mapindex, queue<tuple<int, int>> snake) {
+vector<vector<int>> generate_map(vector<vector<int>> map[mapCNT], int mapindex, queue<tuple<int, int>> snake) {
     tuple<int, int> position;
     int row = 0, col = 0;
     int flag3 = 0;
@@ -316,7 +318,7 @@ int main() {
 
     Snake snake(new_pos);
 
-    vector<vector<int>> whole_map[101];
+    vector<vector<int>> whole_map[mapCNT];
     loadmaps(whole_map);
 
     int cur_map_index = 1;
@@ -331,11 +333,12 @@ int main() {
         ori_pos = new_pos;
         new_pos = snake.nextPosition(map);
 
-        //displayOutcome(map, snake);
+        //if(step_limit > 45)
+            //displayOutcome(map, snake);
         
         int new_head_x = get<0>(new_pos.back());
         int new_head_y = get<1>(new_pos.back());
-        cout << i << ": " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << map[new_head_x][new_head_y] << "$" << point << "\n";
+        //cout << i << ": " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << map[new_head_x][new_head_y] << "$" << point << "\n";
 
         /* Walk one step */
         int one_step_limit = 1;
@@ -378,7 +381,7 @@ int main() {
             
             point += map[new_head_x][new_head_y];
             cur_map_index++;
-            if(cur_map_index > 100)
+            if(cur_map_index > mapCNT - 1)
                 break;
             map = generate_map(whole_map, cur_map_index, new_pos);
         }
@@ -390,7 +393,7 @@ int main() {
             }
         }
     }
-    cout << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << " $ " << point << " / " << 100 << " |\n";
+    cout << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << " $ " << point << " ( " << mapCNT - 1 << " maps );\n";
 
     //system("pause");
     return 0;

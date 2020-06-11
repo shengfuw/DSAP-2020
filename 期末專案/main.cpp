@@ -13,9 +13,13 @@ void displayOutcome(const vector<vector<int>> map, Snake snake);
 
 int main(){
     vector<vector<int>> map;
-    int height = 5, width = 10;
+    int height = 10, width = 15;
     generateMAP(map, height ,width);
     //displayMAP(map);
+    
+    map[3][6] = -1;
+    map[4][8] = -1;
+    map[6][5] = -1;
     
     //set snake start position
     vector<vector<int>> startBody = {
@@ -30,7 +34,7 @@ int main(){
     
     //set targets
     vector<vector<int>> targets = {
-        {2,7}
+        {2,7},{5,4},{3,5},{4,6},{4,5},{8,2}
     };
     /*
     for(int i = 2; i <= 20; i++)
@@ -41,19 +45,23 @@ int main(){
     int targetsCNT = int(targets.size());
     int step = 0, curEaten = 0;
     map[targets[curEaten][0]][targets[curEaten][1]] = 1;
+    map[targets[++curEaten][0]][targets[++curEaten][1]] = 1;
     
     cout << "START!\n";
     displayOutcome(map, snake);
     while (step <= 50) {
+        int temp = snake.geteatenTarget();
         snake.nextPosition(map);
         step++;
         cout << "Step " << step << ":\n";
         displayOutcome(map, snake);
-        if(snake.geteatenTarget() == targetsCNT)
+        if(snake.geteatenTarget() == 3)
             break;
-        if(snake.geteatenTarget() > curEaten){
+        if(snake.geteatenTarget() > temp){
+            map[targets[curEaten-1][0]][targets[curEaten-1][1]] = 0;
             map[targets[curEaten][0]][targets[curEaten][1]] = 0;
-            curEaten++;            map[targets[curEaten][0]][targets[curEaten][1]] = 1;
+            map[targets[++curEaten][0]][targets[++curEaten][1]] = 3;
+            map[targets[++curEaten][0]][targets[++curEaten][1]] = 2;
         }
     }
 }

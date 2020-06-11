@@ -17,5 +17,6 @@ public:
     
     int getlen();
     int geteatenTarget();
+    void display(vector<vector<int>> map);
 };
 
