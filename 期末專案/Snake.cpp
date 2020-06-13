@@ -42,21 +42,29 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
     //get position of snake head
     int headX = get<0>(position.back());
     int headY = get<1>(position.back());
-    int tailX = get<0>(position.front());
-    int tailY = get<1>(position.front());
-    //cout << headX << " " << headY << " ~\n";
+    //int tailX = get<0>(position.front());
+    //int tailY = get<1>(position.front());
     
-    //find a target
+    //find a target and change obstacle
     int targetX = 0, targetY = 0, MAXscore = 0, minDisTarget = 0;
     for(int i = 0; i < map.size(); i++){
         for(int j = 0; j < map[i].size(); j++){
-            int dis = abs(headX - map[i][j]) + abs(headY - map[i][j]);
-            if(map[i][j] > MAXscore || (map[i][j] == MAXscore &&  dis < minDisTarget)){
-                targetX = i;
-                targetY = j;
-                MAXscore = map[i][j];
-                minDisTarget = dis;
+            if(map[i][j] > 0){
+                int dis = abs(headX - i) + abs(headY - j);
+                if(map[i][j] > MAXscore || (map[i][j] == MAXscore && dis < minDisTarget)){
+                    map[targetX][targetY] = -1; // not to eat this
+                    targetX = i;
+                    targetY = j;
+                    MAXscore = map[targetX][targetY];
+                    minDisTarget = dis; 
+                }
+                else{
+                    map[i][j] = -1;
+                }
             }
+            
+            if(i != 0 && i != map.size() - 1 && j != 0 && j != map[0].size() - 1 && map[i][j] == -1)
+                map[i][j] = -5; //obstacle
         }
     }
     //cout << targetX << " " << targetY << " :target\n";
@@ -65,16 +73,18 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
     int directions[4][2] = {{-1,0}, {0,-1}, {1,0}, {0,1}};
 
     //calculate surrounding spaces of head and tail
+    /*
     int headSurroundingSpaces = 4;
     int tailSurroundingSpaces = 4;
     for(int n = 0; n < 4; n++){
         int x = directions[n][0];
         int y = directions[n][1];
-        if(map[headX+x][headY+y] == -1 || map[headX+x][headY+y] == -4)
+        if(map[headX+x][headY+y] == -1 || map[headX+x][headY+y] <= -4)
             headSurroundingSpaces--;
-        if(map[tailX+x][tailY+y] == -1 || map[tailX+x][tailY+y] == -4)
+        if(map[tailX+x][tailY+y] == -1 || map[tailX+x][tailY+y] <= -4)
             tailSurroundingSpaces--;
     }
+    */
     
     //find which position/direction of four that head to move to
     int minDis = int(map.size()) * int(map[0].size());
@@ -86,7 +96,7 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
         int dirX = directions[diri][0]; // up or down
         int dirY = directions[diri][1]; // left or right
         int pos = map[headX+dirX][headY+dirY];
-        if(pos != -1 && pos != -3 && pos != -4){ // check if head can move to this poistion
+        if(pos != -1 && pos != -3 && pos != -4 && pos != -5){ // check if head can move to this poistion
             
             //calculate distant from this poistion to the target
             int dis = abs(headX + dirX - targetX) + abs(headY + dirY - targetY);
@@ -105,7 +115,7 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
             for(int n = 0; n < 4; n++){
                 int x = directions[n][0];
                 int y = directions[n][1];
-                if(map[headX+dirX+x][headY+dirY+y] == -1 || map[headX+dirX+x][headY+dirY+y] == -4 || (map[headX+dirX+x][headY+dirY+y] == -3 && pos > 0))
+                if(map[headX+dirX+x][headY+dirY+y] == -1 || map[headX+dirX+x][headY+dirY+y] == -4 || map[headX+dirX+x][headY+dirY+y] == -5 || (map[headX+dirX+x][headY+dirY+y] == -3 && pos > 0))
                     surroundingSpaces--;
             }
 
@@ -121,7 +131,7 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
                     int nextPos = map[headX+dirX+(x1*a)][headY+dirY+(y1*a)];
                     
                     //level 2
-                    if(nextPos == -4){
+                    if(nextPos <= -4){
                         if(a > 1){
                             for(int j = 0; j < 4; j++){
                                 int x2 = directions[j][0], y2 = directions[j][1];
@@ -130,7 +140,7 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
                                     int nextPos2 = map[headX+dirX+(x1*(a-1))+(x2*b)][headY+dirY+(y1*(a-1))+(y2*b)];
                                     
                                     //level 3
-                                    if(nextPos2 == -4){
+                                    if(nextPos2 <= -4){
                                         if(b > 1){
                                             for(int k = 0; k < 4; k++){
                                                 int x3 = directions[k][0], y3 = directions[k][1], c = 1;
@@ -138,51 +148,58 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
                                                     int nextPos3 = map[headX+dirX+(x1*(a-1))+(x2*(b-1))+(x3*c)][headY+dirY+(y1*(a-1))+(y2*(b-1))+(y3*c)];
                                                     
                                                     //levle 4
-                                                    if(nextPos3 == -4){
+                                                    if(nextPos3 <= -4){
                                                         if(c > 1){
                                                             for(int l = 0; l < 4; l++){
                                                                 int x4 = directions[l][0], y4 = directions[l][1], d = 1;
                                                                 while (isClosure) {
                                                                     int nextPos4 = map[headX+dirX+(x1*(a-1))+(x2*(b-1))+(x3*(c-1))+(x4*d)][headY+dirY+(y1*(a-1))+(y2*(b-1))+(y3*(c-1))+(y4*d)];
-
-                                                                    if(nextPos4 == -4){
+                                                                    
+                                                                    //level 5
+                                                                    if(nextPos4 <= -4){
+                                                                        if(d > 1){
+                                                                            for(int m = 0; m < 4; m++){
+                                                                                int x5 = directions[m][0], y5 = directions[m][1], e = 1;
+                                                                                while (isClosure) {
+                                                                                    int nextPos5 = map[headX+dirX+(x1*(a-1))+(x2*(b-1))+(x3*(c-1))+(x4*(d-1))+(x5*e)][headY+dirY+(y1*(a-1))+(y2*(b-1))+(y3*(c-1))+(y4*(d-1)+(y5*e))];
+                                                                                    
+                                                                                    if(nextPos5 <= -4){
+                                                                                        break;
+                                                                                    }
+                                                                                    else if (nextPos5 == -1)
+                                                                                        isClosure = false;
+                                                                                    e++;
+                                                                                }
+                                                                            }
+                                                                        }
                                                                         break;
                                                                     }
-                                                                    else if (nextPos4 == -1){
+                                                                    else if (nextPos4 == -1)
                                                                         isClosure = false;
-                                                                        break;
-                                                                    }
                                                                     d++;
                                                                 }
                                                             }
                                                         }
                                                         break;
                                                     }
-                                                    
-                                                    else if (nextPos3 == -1){
+                                                    else if (nextPos3 == -1)
                                                         isClosure = false;
-                                                        break;
-                                                    }
                                                     c++;
                                                 }
                                             }
                                         }
                                         break;
                                     }
-                                    else if(nextPos2 == -1){
+                                    else if(nextPos2 == -1)
                                         isClosure = false;
-                                        break;
-                                    }
                                     b++;
                                 }
                             }
                         }
                         break;
                     }
-                    else if(nextPos == -1){
+                    else if(nextPos == -1)
                         isClosure = false;
-                        break;
-                    }
                     a++;
                 }
             }
@@ -195,11 +212,9 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
             
             //compare order: distant -> surrounding space -> orientation
             bool moveToThisPosition = false;
-            if((surroundingSpaces > 0 || map[headX+dirX][headY+dirY] == -2) && !isClosure){
-                if(dis < minDis){
-                    if(tailSurroundingSpaces != 0 || dis != 0)
-                        moveToThisPosition = true;
-                }
+            if(surroundingSpaces > 0 && !isClosure){
+                if(dis < minDis)
+                    moveToThisPosition = true;
                 else if(dis == minDis){
                     if(surroundingSpaces > MAXOfSurroundingSpaces)
                         moveToThisPosition = true;
@@ -223,7 +238,7 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
         tuple<int,int> head(headX, headY);
         position.push(head);
         
-        if(minDis == 0){ // Eating
+        if(map[headX][headY] > 0){ // Eating
             Bodylength++;
             eatenTarget++;
         }

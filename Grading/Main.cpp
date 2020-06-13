@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int const mapCNT = 102;
+int const mapCNT = 110;
 
 void displayOutcome(const vector<vector<int>> map, Snake snake){
     int height = int(map.size());
@@ -77,6 +77,7 @@ void loadmaps(vector<vector<int>> map[mapCNT]) {
         else
             fname = to_string(i);
         file.open("/Users/shengfu/Desktop/臺大/資料結構與進階程式設計 陳炳宇/資料結構與進階程式設計/Grading/map/maps/map_" + fname, ios::in);
+        cout << i << "\n";
         if (!file) {
             cout << "no file" << endl;
         }
@@ -333,12 +334,12 @@ int main() {
         ori_pos = new_pos;
         new_pos = snake.nextPosition(map);
 
-        //if(step_limit > 45)
+        //if(cur_map_index > 100)
             //displayOutcome(map, snake);
         
         int new_head_x = get<0>(new_pos.back());
         int new_head_y = get<1>(new_pos.back());
-        //cout << i << ": " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << map[new_head_x][new_head_y] << "$" << point << "\n";
+        cout << i << ": " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << "|" << map[new_head_x][new_head_y] << "$" << point << "\n";
 
         /* Walk one step */
         int one_step_limit = 1;
@@ -393,7 +394,7 @@ int main() {
             }
         }
     }
-    cout << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << " $ " << point << " ( " << mapCNT - 1 << " maps );\n";
+    cout << " | Final: " << get<0>(new_pos.back()) << ", " << get<1>(new_pos.back()) << " $ " << point << " (" << cur_map_index - 1 << " / " << mapCNT - 1 << " maps);\n";
 
     //system("pause");
     return 0;
