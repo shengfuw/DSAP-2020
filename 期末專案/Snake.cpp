@@ -58,9 +58,8 @@ queue<tuple<int, int>> Snake::nextPosition(vector<vector<int>> map) {
                     MAXscore = map[targetX][targetY];
                     minDisTarget = dis; 
                 }
-                else{
+                else
                     map[i][j] = -1;
-                }
             }
             
             if(i != 0 && i != map.size() - 1 && j != 0 && j != map[0].size() - 1 && map[i][j] == -1)

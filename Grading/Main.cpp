@@ -77,7 +77,6 @@ void loadmaps(vector<vector<int>> map[mapCNT]) {
         else
             fname = to_string(i);
         file.open("/Users/shengfu/Desktop/臺大/資料結構與進階程式設計 陳炳宇/資料結構與進階程式設計/Grading/map/maps/map_" + fname, ios::in);
-        cout << i << "\n";
         if (!file) {
             cout << "no file" << endl;
         }
