@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int const mapCNT = 110;
+int const mapCNT = 201;
 
 void displayOutcome(const vector<vector<int>> map, Snake snake){
     int height = int(map.size());
@@ -333,7 +333,7 @@ int main() {
         ori_pos = new_pos;
         new_pos = snake.nextPosition(map);
 
-        //if(cur_map_index > 100)
+        //if(cur_map_index > 102)
             //displayOutcome(map, snake);
         
         int new_head_x = get<0>(new_pos.back());
